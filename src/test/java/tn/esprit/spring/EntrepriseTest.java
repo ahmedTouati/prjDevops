@@ -50,32 +50,32 @@ public class EntrepriseTest {
 	
 	public void ajouterEntrepriseTest() {
 
-		LOG.info("Start ajouterEntrepriseTest Message method test");
+		LOG.info("Debut ajouterEntrepriseTest Message methode test");
 		LOG.info(this.entreprise);
         entrepriseService.ajouterEntreprise(this.entreprise);
         Entreprise entrepriseAjouté = entrepriseService.getEntrepriseById(this.entreprise.getId());
         assertNotNull(entrepriseAjouté);
 		LOG.info(this.entreprise);
 		LOG.info("Entreprise id" + this.entreprise.getId());
-		LOG.info("End ajouterEntreprise method test");
+		LOG.info("fin ajouterEntreprise methode test");
 	}
 
 	public void getEntrepriseByIdTest() {
-		LOG.info("Start getEntrepriseById method test");
+		LOG.info("Debut getEntrepriseById methode test");
 		LOG.info("Entreprise id" + this.entreprise.getId());
 		assertNotNull(entrepriseService.getEntrepriseById(this.entreprise.getId()));
-		LOG.info("End getEntrepriseById method test");
+		LOG.info("fin getEntrepriseById methode test");
 
 	}
 
 	public void deleteEntrepriseByIdTest() {
-		LOG.info("Start deleteEntrepriseById method test");
+		LOG.info("Debut deleteEntrepriseById methode test");
 		LOG.info("Entreprise id" + this.entreprise.getId());
 		
 		  try {
 			  entrepriseService.deleteEntrepriseById(this.entreprise.getId());
 			  } catch(Exception e) {
-		      fail("Should not have thrown any exception");
+		      fail("N'aurait dû lancer aucune exception");
 		   }
 	}
 
