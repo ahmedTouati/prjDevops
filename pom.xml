@@ -129,7 +129,7 @@
 
 
 		<build>
-
+			<outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 	 <pluginManagement>
       <plugins>
 			<plugin>
