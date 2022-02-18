@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import tn.esprit.spring.repository.TimesheetRepository;
 
 @Service
 public class TimesheetServiceImpl implements ITimesheetService {
-	
+	private static final Logger l = Logger. getLogger(EntrepriseServiceImpl.class);
 
 	@Autowired
 	MissionRepository missionRepository;
@@ -32,11 +33,15 @@ public class TimesheetServiceImpl implements ITimesheetService {
 	EmployeRepository employeRepository;
 	
 	public int ajouterMission(Mission mission) {
+		l.info("In ajouterMission() : ");
+		l.debug("Je vais ajouter une Mission .");
 		missionRepository.save(mission);
 		return mission.getId();
 	}
     
 	public void affecterMissionADepartement(int missionId, int depId) {
+		l.info("In affecterMissionADepartement() : ");
+		l.debug("Je vais affecter Mission A Departement .");
 		Mission mission = missionRepository.findById(missionId).get();
 		Departement dep = deptRepoistory.findById(depId).get();
 		mission.setDepartement(dep);
@@ -45,6 +50,8 @@ public class TimesheetServiceImpl implements ITimesheetService {
 	}
 
 	public void ajouterTimesheet(int missionId, int employeId, Date dateDebut, Date dateFin) {
+		l.info("In ajouterTimesheet() : ");
+		l.debug("Je vais ajouter une timesheet .");
 		TimesheetPK timesheetPK = new TimesheetPK();
 		timesheetPK.setDateDebut(dateDebut);
 		timesheetPK.setDateFin(dateFin);
@@ -60,7 +67,8 @@ public class TimesheetServiceImpl implements ITimesheetService {
 
 	
 	public void validerTimesheet(int missionId, int employeId, Date dateDebut, Date dateFin, int validateurId) {
-		System.out.println("In valider Timesheet");
+		l.info("In validerTimesheet() : ");
+		l.debug("Je vais valider une timesheet .");
 		Employe validateur = employeRepository.findById(validateurId).get();
 		Mission mission = missionRepository.findById(missionId).get();
 		//verifier s'il est un chef de departement (interet des enum)
