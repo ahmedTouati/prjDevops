@@ -33,7 +33,7 @@ pipeline {
         stage('GIT') {
             steps {
                 echo 'Getting Project';
-                /*git 'https://github.com/ahmedTouati/prjDevops.git';*/
+                git 'https://github.com/ahmedTouati/prjDevops.git';
             }
         }
         
@@ -47,7 +47,7 @@ pipeline {
 		stage('MVN COMPILE') {
             steps {
                 echo 'Compile Project';
-                sh 'sudo mvn compile';
+                sh 'sudo mvn clean install';
                 
             }
         }	
