@@ -1,89 +1,73 @@
 package tn.esprit.spring;
 
-import java.text.ParseException;
-import java.util.List;
-
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Assertions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
+
+import java.text.ParseException;
+import java.util.*;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import tn.esprit.spring.entities.Contrat;
 import tn.esprit.spring.entities.Departement;
-import tn.esprit.spring.entities.Entreprise;
+import tn.esprit.spring.entities.Employe;
+import tn.esprit.spring.entities.Mission;
+import tn.esprit.spring.entities.Role;
+import tn.esprit.spring.repository.ContratRepository;
 import tn.esprit.spring.repository.DepartementRepository;
-import tn.esprit.spring.repository.EntrepriseRepository;
-import tn.esprit.spring.services.IEntrepriseService;
-import tn.esprit.spring.utils.BaseJUnit49TestCase;
+import tn.esprit.spring.services.IContratService;
+import tn.esprit.spring.services.IDepartementService;
 
-public class DepartementTest extends BaseJUnit49TestCase {
-	private static final Logger LOG = LogManager.getLogger(DepartementTest.class);
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class DepartementTest {
+
+	private static final Logger logger = LogManager.getLogger(EntrepriseTest.class);
+	private Departement dep1;
+	private Departement dep2;
+	private Departement dep3;
+	
 	@Autowired
-	DepartementRepository deptRepoistory;
-	@Autowired
-	EntrepriseRepository entrepriseRepoistory;
-	@Autowired
-	IEntrepriseService ientrepriseservice;
+	IDepartementService iDepartementService;
+    
+	@MockBean
+	DepartementRepository departRepo ;
+    @Before
+    public void setUp()
+    {
+		 dep1 = new Departement("dep1");
+		 dep2 = new Departement("dep2");
+		 dep2 = new Departement("dep3");
+		
+    }
+    @Test
+    public void tests() throws ParseException {
+    	getAllDepartements();
+    }
+	
+	public void getAllDepartements() {
 
-	private Entreprise entreprise;
-	private Departement departement;
+		logger.info("Début methode getAllDepartements");
 
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		this.departement = new Departement();
-		this.departement.setName(getIdHelper().createRandomString(5));
+        doReturn(Arrays.asList(dep1, dep2, dep3)).when(departRepo).findAll();
 
-		this.entreprise = new Entreprise();
-		this.entreprise.setName(getIdHelper().createRandomString(5));
-		this.entreprise.setRaisonSocial(getIdHelper().createRandomString(5));
-	}
-
-	@Test
-	public void tests() throws ParseException {
-		ajouterDepartementTest();
-		affecterDepartementAEntrepriseTest();
-		getAllDepartementsNamesByEntrepriseTest();
-		deleteDepartementByIdTest();
-	}
-
-	public void deleteDepartementByIdTest() {
-		LOG.info("StartMethodSeleteDepartementById");
-		LOG.info(this.departement);
-		departement.setId(ientrepriseservice.ajouterDepartement(departement));
-		ientrepriseservice.deleteDepartementById(departement.getId());
-		Assert.assertFalse(deptRepoistory.findById(departement.getId()).isPresent());
-		LOG.info("EndDeleteDepartementById");
-	}
-
-	public void getAllDepartementsNamesByEntrepriseTest() {
-		LOG.info("Start Method getAllDepartementsNamesByEntreprise");
-		entreprise.setId(ientrepriseservice.ajouterEntreprise(entreprise));
-		List<String> depNames = ientrepriseservice.getAllDepartementsNamesByEntreprise(entreprise.getId());
-		LOG.info(depNames);
-		Assert.assertTrue(depNames.size() > 0);
-		LOG.info("End Method getAllDepartementsNamesByEntreprise");
-	}
-
-	public void affecterDepartementAEntrepriseTest() {
-		LOG.info("Start Method affecterDepartementAEntreprise");
-		LOG.info(this.departement);
-		LOG.info(this.entreprise);
-		ientrepriseservice.ajouterDepartement(departement);
-		ientrepriseservice.ajouterEntreprise(entreprise);
-		Assert.assertNull(departement.getEntreprise());
-		ientrepriseservice.affecterDepartementAEntreprise(departement.getId(), entreprise.getId());
-		Assert.assertNotNull(ientrepriseservice.getAllDepartementsNamesByEntreprise(entreprise.getId()));
-		LOG.info("End Method affecterDepartementAEntreprise");
-	}
-
-	public void ajouterDepartementTest() {
-		LOG.info("Start Method ajouterDepartement");
-		LOG.info(this.departement);
-		ientrepriseservice.ajouterDepartement(departement);
-		Assert.assertTrue(ientrepriseservice.ajouterDepartement(departement) > 0);
-		LOG.info("End Method ajouterDepartement");
-	}
-
+        List<Departement> deps = iDepartementService.getAllDepartements();
+      
+        Assertions.assertEquals(3, deps.size(), "il faut avoir 3 departements");
+        logger.info("Terminer methode getAllDepartements");
+	}	
+	
 }
