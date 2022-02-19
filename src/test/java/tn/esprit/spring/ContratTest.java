@@ -8,10 +8,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
-import java.util.Date;
-
+import java.util.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,53 +26,45 @@ import tn.esprit.spring.entities.Mission;
 import tn.esprit.spring.entities.Role;
 import tn.esprit.spring.repository.ContratRepository;
 import tn.esprit.spring.services.IContratService;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ContratTest {
 
-	private Contrat contrat;
+	private static final Logger logger = LogManager.getLogger(EntrepriseTest.class);
+	private Contrat contrat1;
+	private Contrat contrat2;
 	
 	@Autowired
 	IContratService iContratService ;
     
-	@Autowired
+	@MockBean
 	ContratRepository contratRepo ;
     @Before
     public void setUp()
     {
     	Date dateDebut=new Date();
 
-		 contrat = new Contrat(dateDebut,"CDI",(float) 2.7); 
+		 contrat1 = new Contrat(dateDebut,"CDI",(float) 2.7); 
+		 contrat2 = new Contrat(dateDebut,"CDD",(float) 3); 
 		
     }
     @Test
     public void tests() throws ParseException {
-    	testAjouterContrat();
-    	testSupprimerContrat();
+    	getAllContrats();
     }
 	
-	public void testAjouterContrat() {
+	public void getAllContrats() {
 
-		int id = iContratService.ajouterContrat(this.contrat);
-		assertEquals(id,this.contrat.getReference());
-	}
+		logger.info("Début methode getAllContrats");
 
-	
-	
-	public void testSupprimerContrat() {
-//		LOG.info("StartMethodSeleteDepartementById");
-//		LOG.info(this.departement);
-//		departement.setId(ientrepriseservice.ajouterDepartement(departement));
-//		ientrepriseservice.deleteDepartementById(departement.getId());
-//		Assert.assertFalse(deptRepoistory.findById(departement.getId()).isPresent());
-//		LOG.info("EndDeleteDepartementById");
-		
-		int ref =iContratService.deleteContratById(this.contrat.getReference());;
-		assertEquals(0, ref);
-	}
-		// TODO Auto-generated method stub
-		
+        doReturn(Arrays.asList(contrat1, contrat2)).when(contratRepo).findAll();
 
+        List<Contrat> contrats = iContratService.getAllContrats();
+      
+        Assertions.assertEquals(2, contrats.size(), "il faut avoir 2 contrats");
+        logger.info("Terminer methode getAllContrats");
+	}	
 	
 }
